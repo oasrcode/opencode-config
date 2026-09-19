@@ -1,15 +1,6 @@
 {
   "version": 3,
   "skills": {
-    "brainstorming": {
-      "source": "obra/superpowers",
-      "sourceType": "github",
-      "sourceUrl": "https://github.com/obra/superpowers.git",
-      "skillPath": "skills/brainstorming/SKILL.md",
-      "skillFolderHash": "881fc4ac82a25e61a58d332426b5673efe060da0",
-      "installedAt": "2026-09-17T19:33:26.223Z",
-      "updatedAt": "2026-09-17T19:33:26.223Z"
-    },
     "writing-plans": {
       "source": "obra/superpowers",
       "sourceType": "github",

@@ -6,7 +6,6 @@
 #   1. Substitutes __HOME__ in opencode.jsonc with the real $HOME (one-time).
 #   2. Demotes a live ~/.agents/skills directory so the repo's skills/ is the
 #      single source of truth (no duplicate skill loading).
-#   3. Installs plugin dependencies (npm ci) when missing.
 #
 # Secrets excluded; config is pushed to a private GitHub remote (origin).
 # Never commit credentials.
@@ -58,21 +57,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# 3. Plugin dependencies
-# ---------------------------------------------------------------------------
-if [ -f "$REPO_DIR/package.json" ]; then
-  if [ -d "$REPO_DIR/node_modules" ]; then
-    log "node_modules already present. Skipping npm ci."
-  else
-    log "Installing plugin dependencies (npm ci)..."
-    npm ci --prefix "$REPO_DIR"
-  fi
-else
-  log "No package.json. Skipping npm ci."
-fi
-
-# ---------------------------------------------------------------------------
-# 4. Preflight hints (non-fatal: never installs, never exits non-zero)
+# 3. Preflight hints (non-fatal: never installs, never exits non-zero)
 # ---------------------------------------------------------------------------
 MCP_BIN="$HOME/.local/bin/codebase-memory-mcp"
 if [ ! -e "$MCP_BIN" ]; then
@@ -88,7 +73,7 @@ if [ ! -d "$PLAYWRIGHT_CACHE" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 5. Next steps
+# 4. Next steps
 # ---------------------------------------------------------------------------
 cat <<EOF
 
