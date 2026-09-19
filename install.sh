@@ -6,9 +6,10 @@
 #   1. Substitutes __HOME__ in opencode.jsonc with the real $HOME (one-time).
 #   2. Demotes a live ~/.agents/skills directory so the repo's skills/ is the
 #      single source of truth (no duplicate skill loading).
-#   3. Installs plugin dependencies (npm install) when missing.
+#   3. Installs plugin dependencies (npm ci) when missing.
 #
-# Local only: no remote, no push, no secrets.
+# Secrets excluded; config is pushed to a private GitHub remote (origin).
+# Never commit credentials.
 set -euo pipefail
 
 # Resolve the repo as this script's own directory.
@@ -61,17 +62,33 @@ fi
 # ---------------------------------------------------------------------------
 if [ -f "$REPO_DIR/package.json" ]; then
   if [ -d "$REPO_DIR/node_modules" ]; then
-    log "node_modules already present. Skipping npm install."
+    log "node_modules already present. Skipping npm ci."
   else
-    log "Installing plugin dependencies (npm install)..."
-    npm install --prefix "$REPO_DIR"
+    log "Installing plugin dependencies (npm ci)..."
+    npm ci --prefix "$REPO_DIR"
   fi
 else
-  log "No package.json. Skipping npm install."
+  log "No package.json. Skipping npm ci."
 fi
 
 # ---------------------------------------------------------------------------
-# 4. Next steps
+# 4. Preflight hints (non-fatal: never installs, never exits non-zero)
+# ---------------------------------------------------------------------------
+MCP_BIN="$HOME/.local/bin/codebase-memory-mcp"
+if [ ! -e "$MCP_BIN" ]; then
+  log "WARNING: $MCP_BIN not found."
+  log "         Install codebase-memory-mcp with:"
+  log "         curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash"
+fi
+
+PLAYWRIGHT_CACHE="$HOME/.cache/ms-playwright"
+if [ ! -d "$PLAYWRIGHT_CACHE" ]; then
+  log "WARNING: $PLAYWRIGHT_CACHE not found."
+  log "         Install Playwright browsers with: npx playwright install chromium"
+fi
+
+# ---------------------------------------------------------------------------
+# 5. Next steps
 # ---------------------------------------------------------------------------
 cat <<EOF
 

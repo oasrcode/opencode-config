@@ -30,17 +30,6 @@
   },
   "share": "disabled",
   "default_agent": "orchestrator",
-  "agent": {
-    "orchestrator": {
-      "description": "Coordinador: analiza, pregunta, investiga, planifica y delega",
-      "mode": "primary",
-      "permission": {
-        "edit": "deny",
-        "bash": "ask",
-        "task": "allow"
-      }
-    }
-  },
   "model": "opencode-go/mimo-v2.5",
   "small_model": "opencode-go/mimo-v2.5",
   "autoupdate": "notify"
