@@ -38,8 +38,13 @@ If `codebase-memory-mcp_*` tools are available (`search_graph`, `trace_path`, `g
 - Never push without explicit user intent.
 - Never add all files (no `-A`, `--all`). Stage specific files only.
 - Show diff before commit-level actions.
+- The `handoff` skill may stage `docs/`; a commit still requires explicit user approval.
 
 ## Error Handling
 - If a subagent fails: report error, suggest alternatives, ask user.
 - If plan needs mid-flight changes: pause, explain, get re-approval.
 - If research is inconclusive: state "insufficient data" and proceed with best judgment.
+
+## Project Onboarding
+- When entering or initializing a repository, run the `handoff` skill's setup check (committed project memory + gitleaks pre-commit hook).
+- If the setup is missing, inform the user and offer to run it. Do not install system tools.

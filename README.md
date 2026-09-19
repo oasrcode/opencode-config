@@ -122,17 +122,33 @@ consumes whatever `gitleaks` binary is already on your `PATH`. `gitleaks` is
 MIT-licensed and distributed as a single self-contained binary — **no Go
 toolchain is required**.
 
+The shipped hook **must** set `pass_filenames: false`. Upstream's
+`gitleaks-system` hook does not set it, and without it `pre-commit` appends
+every staged filename to the command, while `gitleaks git` accepts at most one
+argument — so any commit that stages more than one file would fail.
+
 ### Per project
 
 In each project that adopts the template, copy the skill's
 `templates/pre-commit-config.yaml` into the project root as
-`.pre-commit-config.yaml` (the filename `pre-commit` expects) and **commit it**
-to the project, then install the git hook **once per clone**:
+`.pre-commit-config.yaml` (the filename `pre-commit` expects) and **commit it
+(with your approval)** to the project, then install the git hook **once per
+clone**:
+
+> **Do not overwrite an existing project `.pre-commit-config.yaml`.** If the
+> project already has one, append the `gitleaks` hook entry from the template
+> instead of replacing the file, so existing hooks are preserved.
+
+Only when the project has no config yet:
 
 ```bash
-cp ~/.config/opencode/skills/handoff/templates/pre-commit-config.yaml .pre-commit-config.yaml
+# Guarded so an existing config is never overwritten.
+[ -f .pre-commit-config.yaml ] || cp ~/.config/opencode/skills/handoff/templates/pre-commit-config.yaml .pre-commit-config.yaml
 pre-commit install
 ```
+
+Run `pre-commit install` only once `gitleaks` (>= 8.19) is installed and on your
+`PATH`; otherwise the hook cannot run and every commit will fail.
 
 `install.sh` warns (but does not install) if `gitleaks` or `pre-commit` is
 missing, consistent with how it handles `codebase-memory-mcp` and Playwright

@@ -8,7 +8,7 @@ Run this before writing `docs/HANDOFF.md`, an ADR, the glossary, or the local ov
 2. Replace any match with a reference (`env:VAR_NAME`, `1password://vault/item`) or `<redacted>`.
 3. Never paste raw tokens, keys, passwords, connection strings, or `.env` contents.
 4. If a value is truly ephemeral, put it in `.opencode/handoff.local.md` (gitignored) — still prefer a reference.
-5. Commit only after the scan is clean.
+5. Commit only after the scan is clean AND the user has approved the commit.
 
 ## Patterns to catch and redact
 
