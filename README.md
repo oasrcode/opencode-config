@@ -20,9 +20,15 @@ committed.
 
 ## Clone onto a new WSL machine
 
+This repository is **private**, so cloning on a new machine requires
+authentication. Either log in with the GitHub CLI first (`gh auth login`), or
+clone over HTTPS with a personal access token (PAT) when prompted for a
+password. The PAT needs at least read access to the repository.
+
 If `~/.config/opencode` does **not** exist yet:
 
 ```bash
+gh auth login                    # once per machine, if not already authenticated
 git clone https://github.com/oasrcode/opencode-config.git ~/.config/opencode
 cd ~/.config/opencode && ./install.sh
 ```
@@ -33,7 +39,11 @@ never nest a second `.git` inside `~/.config/opencode`:
 ```bash
 git clone https://github.com/oasrcode/opencode-config.git /tmp/opencode-config
 mkdir -p ~/.config/opencode
+# Option A: rsync (not always installed on a fresh WSL)
 rsync -a --exclude .git /tmp/opencode-config/ ~/.config/opencode/
+# Option B: portable fallback if rsync is unavailable
+# cp -a /tmp/opencode-config/. ~/.config/opencode/
+# rm -rf ~/.config/opencode/.git
 cd ~/.config/opencode && ./install.sh
 ```
 
@@ -64,6 +74,10 @@ referenced (`~/.local/bin/codebase-memory-mcp`). Install it per machine with:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/DeusData/codebase-memory-mcp/main/install.sh | bash
 ```
+
+> **Caution:** `curl … | bash` executes remote code with your user's privileges.
+> Before running it, review the script (`curl -fsSL <url> | less`) or download and
+> inspect it, so you know exactly what is being installed.
 
 This places the binary at `~/.local/bin/codebase-memory-mcp`. `install.sh` warns
 (but does not install) if it is missing.
