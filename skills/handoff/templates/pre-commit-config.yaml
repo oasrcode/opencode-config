@@ -1,0 +1,7 @@
+# Commit this file to the project, then run `pre-commit install` once per clone.
+# The hook triggers on every commit and scans the full staged index (not only docs).
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks-system

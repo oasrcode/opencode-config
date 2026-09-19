@@ -72,8 +72,9 @@ cd ~/.config/opencode
    `~/.agents/skills.bak.<timestamp>` so the repo's `skills/` becomes the
    single source of truth (avoids duplicate skills loading). Symlinks or an
    absent directory are left untouched.
-3. Prints non-fatal preflight hints if the MCP binary or Playwright browsers
-   are missing (it never installs them for you and never fails on absence).
+3. Prints non-fatal preflight hints if the MCP binary, Playwright browsers, or
+   the `handoff` skill's `gitleaks`/`pre-commit` tools are missing (it never
+   installs them for you and never fails on absence).
 
 Plugin dependencies are handled by opencode itself at startup; `install.sh`
 does not install them.
@@ -99,6 +100,43 @@ Playwright browsers are also machine-local; install them with:
 ```bash
 npx playwright install chromium
 ```
+
+## Handoff skill: prerequisites per machine
+
+The global `handoff` skill keeps durable, **git-committed** project memory in
+each project — `docs/HANDOFF.md`, ADRs under `docs/adr/`, and a root
+`CONTEXT.md` glossary — and ships a `templates/pre-commit-config.yaml` with a
+`gitleaks` hook. The hook runs on **every commit** and scans the full staged
+index (not only documentation), so secret patterns are caught before they are
+committed. It needs two tools on the machine and one setup step per clone.
+
+### Per machine
+
+| Tool         | Install                                                                  |
+| ------------ | ------------------------------------------------------------------------ |
+| `gitleaks`   | `brew install gitleaks`, or a binary from the [releases page](https://github.com/gitleaks/gitleaks/releases). |
+| `pre-commit` | `pipx install pre-commit` or `pip install --user pre-commit`.            |
+
+The hook is declared with `id: gitleaks-system` and `language: system`, so it
+consumes whatever `gitleaks` binary is already on your `PATH`. `gitleaks` is
+MIT-licensed and distributed as a single self-contained binary — **no Go
+toolchain is required**.
+
+### Per project
+
+In each project that adopts the template, copy the skill's
+`templates/pre-commit-config.yaml` into the project root as
+`.pre-commit-config.yaml` (the filename `pre-commit` expects) and **commit it**
+to the project, then install the git hook **once per clone**:
+
+```bash
+cp ~/.config/opencode/skills/handoff/templates/pre-commit-config.yaml .pre-commit-config.yaml
+pre-commit install
+```
+
+`install.sh` warns (but does not install) if `gitleaks` or `pre-commit` is
+missing, consistent with how it handles `codebase-memory-mcp` and Playwright
+browsers.
 
 ## Re-authenticate
 

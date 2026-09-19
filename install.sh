@@ -72,6 +72,20 @@ if [ ! -d "$PLAYWRIGHT_CACHE" ]; then
   log "         Install Playwright browsers with: npx playwright install chromium"
 fi
 
+# handoff skill: gitleaks pre-commit hook needs both tools on PATH.
+if ! command -v gitleaks >/dev/null 2>&1; then
+  log "WARNING: gitleaks not found on PATH."
+  log "         Install it with: brew install gitleaks"
+  log "         (or: go install github.com/gitleaks/gitleaks/v8@latest)"
+fi
+
+if ! command -v pre-commit >/dev/null 2>&1; then
+  log "WARNING: pre-commit not found on PATH."
+  log "         Install it with: pipx install pre-commit"
+  log "         (or: pip install --user pre-commit)"
+  log "         Then run 'pre-commit install' once per project that uses the template."
+fi
+
 # ---------------------------------------------------------------------------
 # 4. Next steps
 # ---------------------------------------------------------------------------
