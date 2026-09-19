@@ -1,0 +1,11 @@
+node_modules/
+auth.json
+*.db
+*.db-shm
+*.db-wal
+log/
+*.log
+.opencode/
+.DS_Store
+*.bak
+*.bak.*
